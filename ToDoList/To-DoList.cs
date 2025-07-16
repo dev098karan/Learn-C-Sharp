@@ -1,6 +1,7 @@
 ﻿using BusinessLogicToDoList;
 using System;
 using System.Windows.Forms;
+using ToDoListDataAccessLayer;
 
 namespace ToDoList
 {
@@ -32,7 +33,11 @@ namespace ToDoList
                     Priority = cBoxPriority.SelectedItem.ToString(),
                     DueDate = dueDatePicker.Value
                 };
-                task.Validate();
+                if (task.Validate())
+                {
+                    DataAccessLayer dataAccessLayer = new DataAccessLayer();
+                    dataAccessLayer.AddTask(task);
+                };
             }
             catch (Exception exception)
             {
