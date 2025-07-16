@@ -1,6 +1,7 @@
 ﻿using BusinessLogicToDoList;
 using System;
 using System.Threading;
+using ToDoListDataAccessLayer;
 
 namespace ToDoListConsoleApp
 {
@@ -26,11 +27,15 @@ namespace ToDoListConsoleApp
                             task.TaskName = Console.ReadLine();
                             Console.Write("Enter Duration (in hours): ");
                             task.Duration = Convert.ToInt16(Console.ReadLine());
-                            Console.Write("Enter Priority (High, Medium, Low): ");
+                            Console.Write("Enter Priority (None, High, Medium, Low): ");
                             task.Priority = Console.ReadLine();
                             Console.Write("Enter Due Date (yyyy-mm-dd): ");
                             task.DueDate = Convert.ToDateTime(Console.ReadLine());
-                            task.Validate();
+                            if (task.Validate())
+                            {
+                                DataAccessLayer dataAccessLayer = new DataAccessLayer();
+                                dataAccessLayer.AddTask(task);
+                            };
                             Console.WriteLine("Task added successfully.");
                             break;
                         case 2:

@@ -4,12 +4,13 @@ namespace BusinessLogicToDoList
 {
     public class Task
     {
+        public int TaskId { get; }
         public string TaskName { get; set; }
         public short Duration { get; set; }
         public string Priority { get; set; }
         public DateTime DueDate { get; set; }
 
-        public void Validate()
+        public bool Validate()
         {
             if (TaskName.Length == 0)
             {
@@ -19,6 +20,7 @@ namespace BusinessLogicToDoList
             {
                 throw new Exception("Duration must be greater than zero.");
             }
+            return true;
         }
     }
 }
