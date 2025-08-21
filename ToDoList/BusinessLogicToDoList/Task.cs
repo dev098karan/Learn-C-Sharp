@@ -6,8 +6,8 @@ namespace BusinessLogicToDoList
     {
         public int TaskId { get; }
         public string TaskName { get; set; }
-        public short Duration { get; set; }
-        public string Priority { get; set; }
+        public int TimeRemaining { get; set; }
+        public TaskStatus Status { get; set; }
         public DateTime DueDate { get; set; }
 
         public bool Validate()
@@ -16,11 +16,20 @@ namespace BusinessLogicToDoList
             {
                 throw new Exception("Task Name ia a required field.");
             }
-            if (Duration <= 0)
+            if (TimeRemaining <= 0)
             {
-                throw new Exception("Duration must be greater than zero.");
+                throw new Exception("Required Time must be greater than zero.");
             }
             return true;
         }
+    }
+
+    public enum TaskStatus
+    {
+        ToDo,
+        InProgress,
+        OnHold,
+        Done,
+        Missed
     }
 }

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.lblDueDate = new System.Windows.Forms.Label();
-            this.txtDuration = new System.Windows.Forms.TextBox();
-            this.lblDuration = new System.Windows.Forms.Label();
+            this.txtTimeRemaining = new System.Windows.Forms.MaskedTextBox();
+            this.lblTimeRemaining = new System.Windows.Forms.Label();
             this.txtTaskName = new System.Windows.Forms.TextBox();
             this.lblTaskName = new System.Windows.Forms.Label();
-            this.lblPriority = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.cBoxPriority = new System.Windows.Forms.ComboBox();
             this.btnAddTask = new System.Windows.Forms.Button();
             this.tasksListView = new System.Windows.Forms.DataGridView();
@@ -50,22 +50,25 @@
             this.lblDueDate.TabIndex = 0;
             this.lblDueDate.Text = "Due Date :";
             // 
-            // txtDuration
+            // txtTimeRemaining
             // 
-            this.txtDuration.Location = new System.Drawing.Point(512, 24);
-            this.txtDuration.Name = "txtDuration";
-            this.txtDuration.Size = new System.Drawing.Size(168, 22);
-            this.txtDuration.TabIndex = 3;
-            this.txtDuration.Text = "0";
+            this.txtTimeRemaining.Location = new System.Drawing.Point(512, 24);
+            this.txtTimeRemaining.Mask = "00:00:00";
+            this.txtTimeRemaining.Name = "txtTimeRemaining";
+            this.txtTimeRemaining.Size = new System.Drawing.Size(168, 22);
+            this.txtTimeRemaining.TabIndex = 3;
+            this.txtTimeRemaining.Text = "000000";
+            this.txtTimeRemaining.ValidatingType = typeof(System.DateTime);
+            this.txtTimeRemaining.Leave += new System.EventHandler(this.txtTimeRemaining_Leave);
             // 
-            // lblDuration
+            // lblTimeRemaining
             // 
-            this.lblDuration.AutoSize = true;
-            this.lblDuration.Location = new System.Drawing.Point(391, 27);
-            this.lblDuration.Name = "lblDuration";
-            this.lblDuration.Size = new System.Drawing.Size(92, 16);
-            this.lblDuration.TabIndex = 2;
-            this.lblDuration.Text = "Duration (hrs) :";
+            this.lblTimeRemaining.AutoSize = true;
+            this.lblTimeRemaining.Location = new System.Drawing.Point(391, 27);
+            this.lblTimeRemaining.Name = "lblTimeRemaining";
+            this.lblTimeRemaining.Size = new System.Drawing.Size(103, 16);
+            this.lblTimeRemaining.TabIndex = 2;
+            this.lblTimeRemaining.Text = "Required Time :";
             // 
             // txtTaskName
             // 
@@ -83,29 +86,26 @@
             this.lblTaskName.TabIndex = 6;
             this.lblTaskName.Text = "Task Name :";
             // 
-            // lblPriority
+            // lblStatus
             // 
-            this.lblPriority.AutoSize = true;
-            this.lblPriority.Location = new System.Drawing.Point(29, 67);
-            this.lblPriority.Name = "lblPriority";
-            this.lblPriority.Size = new System.Drawing.Size(54, 16);
-            this.lblPriority.TabIndex = 4;
-            this.lblPriority.Text = "Priority :";
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(29, 67);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(50, 16);
+            this.lblStatus.TabIndex = 4;
+            this.lblStatus.Text = "Status :";
             // 
             // cBoxPriority
             // 
             this.cBoxPriority.FormattingEnabled = true;
             this.cBoxPriority.Items.AddRange(new object[] {
-            "None",
-            "High",
-            "Medium",
-            "Low"});
+            "ToDo",
+            "InProgress"});
             this.cBoxPriority.Location = new System.Drawing.Point(150, 64);
             this.cBoxPriority.Name = "cBoxPriority";
             this.cBoxPriority.Size = new System.Drawing.Size(168, 24);
             this.cBoxPriority.TabIndex = 8;
-            this.cBoxPriority.Text = "None";
-            this.cBoxPriority.SelectedIndexChanged += new System.EventHandler(this.cBoxPriority_SelectedIndexChanged);
+            this.cBoxPriority.Text = "ToDo";
             // 
             // btnAddTask
             // 
@@ -146,13 +146,12 @@
             this.Controls.Add(this.cBoxPriority);
             this.Controls.Add(this.txtTaskName);
             this.Controls.Add(this.lblTaskName);
-            this.Controls.Add(this.lblPriority);
-            this.Controls.Add(this.txtDuration);
-            this.Controls.Add(this.lblDuration);
+            this.Controls.Add(this.lblStatus);
+            this.Controls.Add(this.txtTimeRemaining);
+            this.Controls.Add(this.lblTimeRemaining);
             this.Controls.Add(this.lblDueDate);
             this.Name = "formToDoList";
             this.Text = "To-Do List";
-            this.Load += new System.EventHandler(this.formToDoList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.tasksListView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -162,11 +161,11 @@
         #endregion
 
         private System.Windows.Forms.Label lblDueDate;
-        private System.Windows.Forms.TextBox txtDuration;
-        private System.Windows.Forms.Label lblDuration;
+        private System.Windows.Forms.MaskedTextBox txtTimeRemaining;
+        private System.Windows.Forms.Label lblTimeRemaining;
         private System.Windows.Forms.TextBox txtTaskName;
         private System.Windows.Forms.Label lblTaskName;
-        private System.Windows.Forms.Label lblPriority;
+        private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.ComboBox cBoxPriority;
         private System.Windows.Forms.Button btnAddTask;
         private System.Windows.Forms.DataGridView tasksListView;

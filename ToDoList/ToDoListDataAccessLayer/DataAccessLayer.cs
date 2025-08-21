@@ -15,7 +15,7 @@ namespace ToDoListDataAccessLayer
                 connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = $"SET DATEFORMAT dmy;INSERT INTO dbo.Tasks (TaskName, DurationInHrs, Priority, DueDate) VALUES ('{task.TaskName}', {task.Duration}, '{task.Priority}', '{task.DueDate}')";
+                command.CommandText = $"SET DATEFORMAT dmy;INSERT INTO dbo.Tasks (TaskName, TimeRemaining, Status, DueDate) VALUES ('{task.TaskName}', {task.TimeRemaining}, '{(int)task.Status}', '{task.DueDate}')";
                 command.ExecuteNonQuery();
                 connection.Close();
 
