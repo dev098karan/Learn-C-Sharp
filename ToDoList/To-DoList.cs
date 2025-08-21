@@ -12,16 +12,6 @@ namespace ToDoList
             InitializeComponent();
         }
 
-        private void txtTask_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cBoxPriority_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -29,8 +19,8 @@ namespace ToDoList
                 Task task = new Task()
                 {
                     TaskName = txtTaskName.Text,
-                    Duration = Convert.ToInt16(txtDuration.Text),
-                    Priority = cBoxPriority.SelectedItem.ToString(),
+                    TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(txtTimeRemaining.Text, "hh\\:mm\\:ss", null).TotalSeconds),
+                    Status = (TaskStatus)Enum.Parse(typeof(TaskStatus), cBoxPriority.SelectedItem.ToString()),
                     DueDate = dueDatePicker.Value
                 };
                 if (task.Validate())
@@ -45,9 +35,16 @@ namespace ToDoList
             }
         }
 
-        private void formToDoList_Load(object sender, EventArgs e)
+        private void txtTimeRemaining_Leave(object sender, EventArgs e)
         {
-
+            if (!DateTime.TryParseExact(txtTimeRemaining.Text, "HH:mm:ss",
+                                null,
+                                System.Globalization.DateTimeStyles.None,
+                                out _))
+            {
+                MessageBox.Show("Please enter a valid time in hh:mm:ss format.");
+                txtTimeRemaining.Focus();
+            }
         }
     }
 }

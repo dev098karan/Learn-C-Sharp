@@ -25,10 +25,10 @@ namespace ToDoListConsoleApp
                             Task task = new Task();
                             Console.Write("Enter Task Name: ");
                             task.TaskName = Console.ReadLine();
-                            Console.Write("Enter Duration (in hours): ");
-                            task.Duration = Convert.ToInt16(Console.ReadLine());
-                            Console.Write("Enter Priority (None, High, Medium, Low): ");
-                            task.Priority = Console.ReadLine();
+                            Console.Write("Enter Duration (in hh:mm:ss): ");
+                            task.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(Console.ReadLine(), "hh\\:mm\\:ss", null).TotalSeconds);
+                            Console.Write("Enter Priority (ToDo, InProgress): ");
+                            task.Status = (TaskStatus)Enum.Parse(typeof(TaskStatus), Console.ReadLine());
                             Console.Write("Enter Due Date (yyyy-mm-dd): ");
                             task.DueDate = Convert.ToDateTime(Console.ReadLine());
                             if (task.Validate())
