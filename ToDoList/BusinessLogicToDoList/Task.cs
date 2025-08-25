@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 
 namespace BusinessLogicToDoList
 {
@@ -12,9 +13,9 @@ namespace BusinessLogicToDoList
 
         public bool Validate()
         {
-            if (TaskName.Length == 0)
+            if (TaskName.IsNullOrEmpty())
             {
-                throw new Exception("Task Name ia a required field.");
+                throw new Exception("Task Name is a required field.");
             }
             if (TimeRemaining <= 0)
             {
@@ -28,8 +29,6 @@ namespace BusinessLogicToDoList
     {
         ToDo,
         InProgress,
-        OnHold,
-        Done,
-        Missed
+        Done
     }
 }
