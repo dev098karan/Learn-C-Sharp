@@ -1,5 +1,6 @@
 ﻿using BusinessLogicToDoList;
 using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -7,14 +8,19 @@ namespace ToDoListDataAccessLayer
 {
     public class DataAccessLayer
     {
+        private SqlConnection CreateSqlConnectionAndOpenConnection()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["ToDoListConnection"].ConnectionString;
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+            return connection;
+        }
+
         public void AddTask(BusinessLogicToDoList.Task task)
         {
             try
             {
-                string connectionString = "Data Source=KARANDEV\\SQLEXPRESS;Initial Catalog=ToDoListDB;User ID=sa;Password=DBpassword;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
-                connection.Open();
+                SqlConnection connection = CreateSqlConnectionAndOpenConnection();
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
@@ -38,10 +44,7 @@ namespace ToDoListDataAccessLayer
         {
             try
             {
-                string connectionString = "Data Source=KARANDEV\\SQLEXPRESS;Initial Catalog=ToDoListDB;User ID=sa;Password=DBpassword;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
-                connection.Open();
+                SqlConnection connection = CreateSqlConnectionAndOpenConnection();
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
@@ -65,10 +68,7 @@ namespace ToDoListDataAccessLayer
         {
             try
             {
-                string connectionString = "Data Source=KARANDEV\\SQLEXPRESS;Initial Catalog=ToDoListDB;User ID=sa;Password=DBpassword;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
-                connection.Open();
+                SqlConnection connection = CreateSqlConnectionAndOpenConnection();
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
@@ -93,10 +93,7 @@ namespace ToDoListDataAccessLayer
         {
             try
             {
-                string connectionString = "Data Source=KARANDEV\\SQLEXPRESS;Initial Catalog=ToDoListDB;User ID=sa;Password=DBpassword;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
-                connection.Open();
+                SqlConnection connection = CreateSqlConnectionAndOpenConnection();
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;

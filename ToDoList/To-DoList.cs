@@ -1,7 +1,7 @@
 ﻿using BusinessLogicToDoList;
 using System;
+using System.Configuration;
 using System.Data;
-using System.Security.Policy;
 using System.Windows.Forms;
 using ToDoListDataAccessLayer;
 
@@ -96,7 +96,7 @@ namespace ToDoList
         {
             lblSelectedTaskIdValue.Text = tasksListView.Rows[e.RowIndex].Cells["Task Id"].Value.ToString();
             txtTaskName.Text = tasksListView.Rows[e.RowIndex].Cells["Task Name"].Value.ToString();
-            cBoxStatus.SelectedValue = tasksListView.Rows[e.RowIndex].Cells["Status"].Value.ToString();
+            cBoxStatus.SelectedIndex = Convert.ToInt32((TaskStatus)Enum.Parse(typeof(TaskStatus), tasksListView.Rows[e.RowIndex].Cells["Status"].Value.ToString()));
             txtTimeRemaining.Text = tasksListView.Rows[e.RowIndex].Cells["Time Remaining"].Value.ToString();
             dueDatePicker.Value = Convert.ToDateTime(tasksListView.Rows[e.RowIndex].Cells["Due Date"].Value);
         }
@@ -142,6 +142,12 @@ namespace ToDoList
 
         private void formToDoList_Load(object sender, EventArgs e)
         {
+            this.Text = ConfigurationManager.AppSettings["ApplicationName"].ToString();
+            btnShowAllTasks.Text = ConfigurationManager.AppSettings["ShowAllTasksButton"].ToString();
+            btnAddTask.Text = ConfigurationManager.AppSettings["AddTaskButton"].ToString();
+            btnUpdateTask.Text = ConfigurationManager.AppSettings["UpdateTaskButton"].ToString();
+            btnDeleteTask.Text = ConfigurationManager.AppSettings["DeleteTaskButton"].ToString();
+
             resetToDoListForm();
         }
 
