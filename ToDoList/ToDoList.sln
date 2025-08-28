@@ -11,6 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoListConsoleApp", "ToDoL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoListDataAccessLayer", "ToDoListDataAccessLayer\ToDoListDataAccessLayer.csproj", "{4105BCE4-0474-4DCB-B558-A9B64F10FF35}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{0BE58F62-C113-4B85-87A7-1B86138BC0BB}"
+	ProjectSection(SolutionItems) = preProject
+		InitDatabase.sql = InitDatabase.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
