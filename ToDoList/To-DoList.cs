@@ -14,6 +14,31 @@ namespace ToDoList
             InitializeComponent();
         }
 
+        private void fillTaskStatusComboBox()
+        {
+            try
+            {
+                DataAccessLayer dataAccessLayer = new DataAccessLayer();
+                DataSet taskStatuses = dataAccessLayer.GetAllTaskStatuses();
+                cBoxStatus.DisplayMember = "StatusName";
+                cBoxStatus.ValueMember = "StatusId";
+                cBoxStatus.DataSource = taskStatuses.Tables[0];
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Error while loading task statuses: {exception.Message}");
+            }
+        }
+
+        private void resetToDoListForm()
+        {
+            lblSelectedTaskIdValue.Text = "N/A";
+            txtTaskName.Text = string.Empty;
+            txtTimeRemaining.Text = "00:00:00";
+            cBoxStatus.SelectedIndex = -1;
+            dueDatePicker.Value = DateTime.Now.AddDays(1);
+        }
+
         private void btnAddTask_Click(object sender, EventArgs e)
         {
             try
@@ -21,7 +46,7 @@ namespace ToDoList
                 Task task = new Task();
                 task.TaskName = txtTaskName.Text;
                 task.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(txtTimeRemaining.Text, "hh\\:mm\\:ss", null).TotalSeconds);
-                task.Status = (TaskStatus)cBoxStatus.SelectedIndex;
+                task.TaskStatusId = Convert.ToInt16(cBoxStatus.SelectedValue);
                 task.DueDate = dueDatePicker.Value;
 
                 if (task.Validate())
@@ -62,7 +87,7 @@ namespace ToDoList
                 Task updatedTask = new Task();
                 updatedTask.TaskName = txtTaskName.Text;
                 updatedTask.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(txtTimeRemaining.Text, "hh\\:mm\\:ss", null).TotalSeconds);
-                updatedTask.Status = (TaskStatus)cBoxStatus.SelectedIndex;
+                updatedTask.TaskStatusId = Convert.ToInt16(cBoxStatus.SelectedValue);
                 updatedTask.DueDate = dueDatePicker.Value;
 
                 if (updatedTask.Validate())
@@ -83,20 +108,11 @@ namespace ToDoList
             }
         }
 
-        private void resetToDoListForm()
-        {
-            lblSelectedTaskIdValue.Text = "N/A";
-            txtTaskName.Text = string.Empty;
-            txtTimeRemaining.Text = "00:00:00";
-            cBoxStatus.SelectedIndex = 0;
-            dueDatePicker.Value = DateTime.Now.AddDays(1);
-        }
-
         private void tasksListView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             lblSelectedTaskIdValue.Text = tasksListView.Rows[e.RowIndex].Cells["Task Id"].Value.ToString();
             txtTaskName.Text = tasksListView.Rows[e.RowIndex].Cells["Task Name"].Value.ToString();
-            cBoxStatus.SelectedIndex = Convert.ToInt32((TaskStatus)Enum.Parse(typeof(TaskStatus), tasksListView.Rows[e.RowIndex].Cells["Status"].Value.ToString()));
+            cBoxStatus.Text = tasksListView.Rows[e.RowIndex].Cells["Task Status"].Value.ToString();
             txtTimeRemaining.Text = tasksListView.Rows[e.RowIndex].Cells["Time Remaining"].Value.ToString();
             dueDatePicker.Value = Convert.ToDateTime(tasksListView.Rows[e.RowIndex].Cells["Due Date"].Value);
         }
@@ -111,7 +127,7 @@ namespace ToDoList
                 DataTable tasksTable = new DataTable();
                 tasksTable.Columns.Add("Task Id", typeof(int));
                 tasksTable.Columns.Add("Task Name", typeof(string));
-                tasksTable.Columns.Add("Status", typeof(string));
+                tasksTable.Columns.Add("Task Status", typeof(string));
                 tasksTable.Columns.Add("Time Remaining", typeof(string));
                 tasksTable.Columns.Add("Due Date", typeof(DateTime));
 
@@ -120,7 +136,7 @@ namespace ToDoList
                     DataRow taskRow = tasksTable.NewRow();
                     taskRow["Task Id"] = row["TaskId"];
                     taskRow["Task Name"] = row["TaskName"];
-                    taskRow["Status"] = ((TaskStatus)Convert.ToByte(row["Status"])).ToString();
+                    taskRow["Task Status"] = row["StatusName"];
                     taskRow["Time Remaining"] = TimeSpan.FromSeconds(Convert.ToInt32(row["TimeRemaining"])).ToString(@"hh\:mm\:ss");
                     taskRow["Due Date"] = Convert.ToDateTime(row["DueDate"]);
                     tasksTable.Rows.Add(taskRow);
@@ -130,7 +146,7 @@ namespace ToDoList
 
                 this.tasksListView.Columns["Task Id"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Task Name"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-                this.tasksListView.Columns["Status"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                this.tasksListView.Columns["Task Status"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Time Remaining"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Due Date"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
@@ -147,6 +163,8 @@ namespace ToDoList
             btnAddTask.Text = ConfigurationManager.AppSettings["AddTaskButton"].ToString();
             btnUpdateTask.Text = ConfigurationManager.AppSettings["UpdateTaskButton"].ToString();
             btnDeleteTask.Text = ConfigurationManager.AppSettings["DeleteTaskButton"].ToString();
+
+            fillTaskStatusComboBox();
 
             resetToDoListForm();
         }

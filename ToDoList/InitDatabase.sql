@@ -1,6 +1,6 @@
 USE [ToDoListDB]
 GO
-/****** Object:  Table [dbo].[Tasks]    Script Date: 28-08-2025 23:08:33 ******/
+/****** Object:  Table [dbo].[Tasks]    Script Date: 02-09-2025 23:19:10 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9,7 +9,30 @@ CREATE TABLE [dbo].[Tasks](
 	[TaskId] [int] IDENTITY(1,1) NOT NULL,
 	[TaskName] [nvarchar](50) NOT NULL,
 	[TimeRemaining] [int] NOT NULL,
-	[Status] [tinyint] NOT NULL,
-	[DueDate] [date] NOT NULL
+	[TaskStatusId] [tinyint] NOT NULL,
+	[DueDate] [date] NOT NULL,
+ CONSTRAINT [PK_Tasks] PRIMARY KEY CLUSTERED 
+(
+	[TaskId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TaskStatus]    Script Date: 02-09-2025 23:19:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TaskStatus](
+	[StatusId] [tinyint] IDENTITY(1,1) NOT NULL,
+	[StatusName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_TaskStatus] PRIMARY KEY CLUSTERED 
+(
+	[StatusId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Tasks]  WITH CHECK ADD  CONSTRAINT [FK_Tasks_TaskStatus] FOREIGN KEY([TaskStatusId])
+REFERENCES [dbo].[TaskStatus] ([StatusId])
+GO
+ALTER TABLE [dbo].[Tasks] CHECK CONSTRAINT [FK_Tasks_TaskStatus]
 GO
