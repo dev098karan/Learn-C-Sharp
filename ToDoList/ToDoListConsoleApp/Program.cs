@@ -34,8 +34,8 @@ namespace ToDoListConsoleApp
                             task.TaskName = Console.ReadLine();
                             Console.Write("Enter Time Required (hh:mm:ss): ");
                             task.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(Console.ReadLine(), "hh\\:mm\\:ss", null).TotalSeconds);
-                            Console.Write("Enter Status (ToDo, InProgress, Done): ");
-                            task.Status = (TaskStatus)Enum.Parse(typeof(TaskStatus), Console.ReadLine());
+                            Console.Write("Enter Status Id (1 - ToDo, 2 - InProgress, 3 - Done): ");
+                            task.TaskStatusId = Convert.ToInt16(Console.ReadLine());
                             Console.Write("Enter Due Date (yyyy-mm-dd): ");
                             task.DueDate = Convert.ToDateTime(Console.ReadLine());
                             if (task.Validate())
@@ -50,7 +50,7 @@ namespace ToDoListConsoleApp
                             {
                                 Console.Write($"Task Id: {row["TaskId"]}, ");
                                 Console.Write($"Task Name: {row["TaskName"]}, ");
-                                Console.Write($"Status: {((TaskStatus)Convert.ToByte(row["Status"])).ToString()}, ");
+                                Console.Write($"Task Status: {row["StatusName"]}, ");
                                 Console.Write($"Time Remaining: {TimeSpan.FromSeconds(Convert.ToInt32(row["TimeRemaining"])).ToString(@"hh\:mm\:ss")}, ");
                                 Console.WriteLine($"Due Date: {Convert.ToDateTime(row["DueDate"])}");
                             }
@@ -62,8 +62,8 @@ namespace ToDoListConsoleApp
                             task.TaskName = Console.ReadLine();
                             Console.Write("Enter Updated Time Required (hh:mm:ss): ");
                             task.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(Console.ReadLine(), "hh\\:mm\\:ss", null).TotalSeconds);
-                            Console.Write("Enter Updated Status (ToDo, InProgress, Done): ");
-                            task.Status = (TaskStatus)Enum.Parse(typeof(TaskStatus), Console.ReadLine());
+                            Console.Write("Enter Updated Status Id (1 - ToDo, 2 - InProgress, 3 - Done): ");
+                            task.TaskStatusId = Convert.ToInt16(Console.ReadLine());
                             Console.Write("Enter Updated Due Date (yyyy-mm-dd): ");
                             task.DueDate = Convert.ToDateTime(Console.ReadLine());
                             if (task.Validate())
