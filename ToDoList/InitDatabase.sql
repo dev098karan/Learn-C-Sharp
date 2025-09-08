@@ -1,6 +1,6 @@
 USE [ToDoListDB]
 GO
-/****** Object:  Table [dbo].[Tasks]    Script Date: 02-09-2025 23:19:10 ******/
+/****** Object:  Table [dbo].[Tasks]    Script Date: 08-09-2025 23:09:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17,7 +17,7 @@ CREATE TABLE [dbo].[Tasks](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TaskStatus]    Script Date: 02-09-2025 23:19:11 ******/
+/****** Object:  Table [dbo].[TaskStatus]    Script Date: 08-09-2025 23:09:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -35,4 +35,79 @@ ALTER TABLE [dbo].[Tasks]  WITH CHECK ADD  CONSTRAINT [FK_Tasks_TaskStatus] FORE
 REFERENCES [dbo].[TaskStatus] ([StatusId])
 GO
 ALTER TABLE [dbo].[Tasks] CHECK CONSTRAINT [FK_Tasks_TaskStatus]
+GO
+/****** Object:  StoredProcedure [dbo].[DeleteTask]    Script Date: 08-09-2025 23:09:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[DeleteTask]
+	@TaskId INT
+AS
+BEGIN
+	DELETE FROM dbo.Tasks 
+	WHERE TaskId = @TaskId
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllTasks]    Script Date: 08-09-2025 23:09:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetAllTasks]
+AS
+BEGIN
+	SELECT t.TaskId, t.TaskName, ts.StatusName, t.TimeRemaining, t.DueDate
+	FROM dbo.Tasks AS t INNER JOIN dbo.TaskStatus AS ts
+	ON t.TaskStatusId = ts.StatusId
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllTaskStatuses]    Script Date: 08-09-2025 23:09:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetAllTaskStatuses]
+AS
+BEGIN
+	SELECT StatusId, StatusName
+	FROM dbo.TaskStatus
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[InsertTask]    Script Date: 08-09-2025 23:09:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[InsertTask]
+	@TaskName NVARCHAR(50),
+	@TimeRemaining INT,
+	@TaskStatusId INT,
+	@DueDate DATE
+AS
+BEGIN
+	INSERT INTO dbo.Tasks (TaskName, TimeRemaining, TaskStatusId, DueDate)
+	VALUES (@TaskName, @TimeRemaining, @TaskStatusId, @DueDate);
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[UpdateTask]    Script Date: 08-09-2025 23:09:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[UpdateTask]
+ @TaskId INT,
+ @TaskName NVARCHAR(50),  
+ @TimeRemaining INT,  
+ @TaskStatusId INT,  
+ @DueDate DATE  
+AS  
+BEGIN  
+ UPDATE dbo.Tasks   
+ SET TaskName = @TaskName,  
+  TimeRemaining = @TimeRemaining,  
+  TaskStatusId = @TaskStatusId,  
+  DueDate = @DueDate
+ WHERE TaskId = @TaskId
+END;
 GO
