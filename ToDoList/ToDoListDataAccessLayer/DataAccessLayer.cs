@@ -24,7 +24,8 @@ namespace ToDoListDataAccessLayer
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = $"SET DATEFORMAT dmy;INSERT INTO dbo.Tasks (TaskName, TimeRemaining, TaskStatusId, DueDate) VALUES (@TaskName, @TimeRemaining, @TaskStatusId, @DueDate)";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "InsertTask";
                 command.Parameters.AddWithValue("@TaskName", task.TaskName);
                 command.Parameters.AddWithValue("@TimeRemaining", task.TimeRemaining);
                 command.Parameters.AddWithValue("@TaskStatusId", task.TaskStatusId);
@@ -48,7 +49,8 @@ namespace ToDoListDataAccessLayer
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = "SELECT t.TaskId, t.TaskName, ts.StatusName, t.TimeRemaining, t.DueDate FROM dbo.Tasks AS t INNER JOIN dbo.TaskStatus AS ts ON t.TaskStatusId = ts.StatusId";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "GetAllTasks";
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataSet tasks = new DataSet();
@@ -72,7 +74,8 @@ namespace ToDoListDataAccessLayer
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = "UPDATE dbo.Tasks SET TaskName = @TaskName, TimeRemaining = @TimeRemaining, TaskStatusId = @TaskStatusId, DueDate = @DueDate WHERE TaskId = @TaskId";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "UpdateTask";
                 command.Parameters.AddWithValue("@TaskName", updatedTask.TaskName);
                 command.Parameters.AddWithValue("@TimeRemaining", updatedTask.TimeRemaining);
                 command.Parameters.AddWithValue("@TaskStatusId", updatedTask.TaskStatusId);
@@ -97,7 +100,8 @@ namespace ToDoListDataAccessLayer
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = "DELETE FROM dbo.Tasks WHERE TaskId = @TaskId";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "DeleteTask";
                 command.Parameters.AddWithValue("@TaskId", taskId);
 
                 command.ExecuteNonQuery();
@@ -118,7 +122,8 @@ namespace ToDoListDataAccessLayer
 
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = "SELECT StatusId, StatusName FROM dbo.TaskStatus";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "GetAllTaskStatuses";
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataSet taskStatuses = new DataSet();
