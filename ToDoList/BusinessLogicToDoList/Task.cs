@@ -5,11 +5,13 @@ namespace BusinessLogicToDoList
 {
     public class Task
     {
-        public int TaskId { get; }
+        public int TaskId { get; set; }
         public string TaskName { get; set; }
         public int TimeRemaining { get; set; }
         public short TaskStatusId { get; set; }
         public DateTime DueDate { get; set; }
+        public string TaskStatusName { get; set; }
+        public bool IsDeleted { get; set; }
 
         public bool Validate()
         {

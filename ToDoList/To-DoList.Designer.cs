@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.txtTimeRemaining = new System.Windows.Forms.MaskedTextBox();
             this.lblTimeRemaining = new System.Windows.Forms.Label();
             this.txtTaskName = new System.Windows.Forms.TextBox();
@@ -42,7 +42,7 @@
             this.cBoxStatus = new System.Windows.Forms.ComboBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.lblDueDate = new System.Windows.Forms.Label();
-            this.btnShowAllTasks = new System.Windows.Forms.Button();
+            this.btnSaveAll = new System.Windows.Forms.Button();
             this.btnDeleteTask = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tasksListView)).BeginInit();
             this.SuspendLayout();
@@ -53,7 +53,7 @@
             this.txtTimeRemaining.Mask = "00:00:00";
             this.txtTimeRemaining.Name = "txtTimeRemaining";
             this.txtTimeRemaining.Size = new System.Drawing.Size(168, 22);
-            this.txtTimeRemaining.TabIndex = 3;
+            this.txtTimeRemaining.TabIndex = 1;
             this.txtTimeRemaining.Text = "000000";
             this.txtTimeRemaining.ValidatingType = typeof(System.DateTime);
             this.txtTimeRemaining.Leave += new System.EventHandler(this.txtTimeRemaining_Leave);
@@ -72,7 +72,7 @@
             this.txtTaskName.Location = new System.Drawing.Point(182, 24);
             this.txtTaskName.Name = "txtTaskName";
             this.txtTaskName.Size = new System.Drawing.Size(168, 22);
-            this.txtTaskName.TabIndex = 7;
+            this.txtTaskName.TabIndex = 0;
             // 
             // lblTaskName
             // 
@@ -85,10 +85,10 @@
             // 
             // btnAddTask
             // 
-            this.btnAddTask.Location = new System.Drawing.Point(356, 64);
+            this.btnAddTask.Location = new System.Drawing.Point(32, 64);
             this.btnAddTask.Name = "btnAddTask";
             this.btnAddTask.Size = new System.Drawing.Size(318, 23);
-            this.btnAddTask.TabIndex = 9;
+            this.btnAddTask.TabIndex = 4;
             this.btnAddTask.Text = "Add Task";
             this.btnAddTask.UseVisualStyleBackColor = true;
             this.btnAddTask.Click += new System.EventHandler(this.btnAddTask_Click);
@@ -96,14 +96,14 @@
             // tasksListView
             // 
             this.tasksListView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.tasksListView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.tasksListView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.tasksListView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.tasksListView.Location = new System.Drawing.Point(32, 109);
             this.tasksListView.Name = "tasksListView";
@@ -136,10 +136,10 @@
             // 
             // btnUpdateTask
             // 
-            this.btnUpdateTask.Location = new System.Drawing.Point(680, 64);
+            this.btnUpdateTask.Location = new System.Drawing.Point(356, 64);
             this.btnUpdateTask.Name = "btnUpdateTask";
             this.btnUpdateTask.Size = new System.Drawing.Size(324, 23);
-            this.btnUpdateTask.TabIndex = 14;
+            this.btnUpdateTask.TabIndex = 5;
             this.btnUpdateTask.Text = "Update Task";
             this.btnUpdateTask.UseVisualStyleBackColor = true;
             this.btnUpdateTask.Click += new System.EventHandler(this.btnUpdateTask_Click);
@@ -149,7 +149,7 @@
             this.dueDatePicker.Location = new System.Drawing.Point(1162, 22);
             this.dueDatePicker.Name = "dueDatePicker";
             this.dueDatePicker.Size = new System.Drawing.Size(168, 22);
-            this.dueDatePicker.TabIndex = 18;
+            this.dueDatePicker.TabIndex = 3;
             this.dueDatePicker.Value = new System.DateTime(2025, 8, 24, 0, 0, 0, 0);
             // 
             // cBoxStatus
@@ -163,7 +163,7 @@
             this.cBoxStatus.Location = new System.Drawing.Point(836, 24);
             this.cBoxStatus.Name = "cBoxStatus";
             this.cBoxStatus.Size = new System.Drawing.Size(168, 24);
-            this.cBoxStatus.TabIndex = 17;
+            this.cBoxStatus.TabIndex = 2;
             // 
             // lblStatus
             // 
@@ -183,22 +183,22 @@
             this.lblDueDate.TabIndex = 15;
             this.lblDueDate.Text = "Due Date :";
             // 
-            // btnShowAllTasks
+            // btnSaveAll
             // 
-            this.btnShowAllTasks.Location = new System.Drawing.Point(32, 64);
-            this.btnShowAllTasks.Name = "btnShowAllTasks";
-            this.btnShowAllTasks.Size = new System.Drawing.Size(318, 23);
-            this.btnShowAllTasks.TabIndex = 19;
-            this.btnShowAllTasks.Text = "Show All Tasks";
-            this.btnShowAllTasks.UseVisualStyleBackColor = true;
-            this.btnShowAllTasks.Click += new System.EventHandler(this.btnShowAllTasks_Click);
+            this.btnSaveAll.Location = new System.Drawing.Point(1012, 64);
+            this.btnSaveAll.Name = "btnSaveAll";
+            this.btnSaveAll.Size = new System.Drawing.Size(318, 23);
+            this.btnSaveAll.TabIndex = 7;
+            this.btnSaveAll.Text = "Save All";
+            this.btnSaveAll.UseVisualStyleBackColor = true;
+            this.btnSaveAll.Click += new System.EventHandler(this.btnSaveAll_Click);
             // 
             // btnDeleteTask
             // 
-            this.btnDeleteTask.Location = new System.Drawing.Point(1010, 64);
+            this.btnDeleteTask.Location = new System.Drawing.Point(686, 64);
             this.btnDeleteTask.Name = "btnDeleteTask";
             this.btnDeleteTask.Size = new System.Drawing.Size(320, 23);
-            this.btnDeleteTask.TabIndex = 20;
+            this.btnDeleteTask.TabIndex = 6;
             this.btnDeleteTask.Text = "Delete Task";
             this.btnDeleteTask.UseVisualStyleBackColor = true;
             this.btnDeleteTask.Click += new System.EventHandler(this.btnDeleteTask_Click);
@@ -209,7 +209,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1362, 450);
             this.Controls.Add(this.btnDeleteTask);
-            this.Controls.Add(this.btnShowAllTasks);
+            this.Controls.Add(this.btnSaveAll);
             this.Controls.Add(this.dueDatePicker);
             this.Controls.Add(this.cBoxStatus);
             this.Controls.Add(this.lblStatus);
@@ -248,7 +248,7 @@
         private System.Windows.Forms.Button btnUpdateTask;
         private System.Windows.Forms.DateTimePicker dueDatePicker;
         private System.Windows.Forms.ComboBox cBoxStatus;
-        private System.Windows.Forms.Button btnShowAllTasks;
+        private System.Windows.Forms.Button btnSaveAll;
         private System.Windows.Forms.Button btnDeleteTask;
     }
 }
