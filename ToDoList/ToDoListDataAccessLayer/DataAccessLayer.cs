@@ -1,5 +1,6 @@
 ﻿using BusinessLogicToDoList;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -41,10 +42,11 @@ namespace ToDoListDataAccessLayer
             }
         }
 
-        public DataSet GetAllTasks()
+        public List<Task> GetAllTasks()
         {
             try
             {
+                List<Task> tasks = new List<Task>();
                 SqlConnection connection = CreateSqlConnectionAndOpenConnection();
 
                 SqlCommand command = new SqlCommand();
@@ -52,9 +54,17 @@ namespace ToDoListDataAccessLayer
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "GetAllTasks";
 
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataSet tasks = new DataSet();
-                adapter.Fill(tasks);
+                SqlDataReader dataReader = command.ExecuteReader();
+                while(dataReader.Read())
+                {
+                    Task task = new Task();
+                    task.TaskId = Convert.ToInt32(dataReader["TaskId"]);
+                    task.TaskName = dataReader["TaskName"].ToString();
+                    task.TaskStatusName = dataReader["StatusName"].ToString();
+                    task.TimeRemaining = Convert.ToInt32(dataReader["TimeRemaining"]);
+                    task.DueDate = Convert.ToDateTime(dataReader["DueDate"]);
+                    tasks.Add(task);
+                }
 
                 connection.Close();
 
@@ -136,6 +146,35 @@ namespace ToDoListDataAccessLayer
             catch (Exception exception)
             {
                 throw new Exception($"Error while retrieving task statuses from the database: {exception.Message}");
+            }
+        }
+
+        public void SaveAllTasks(List<Task> tasks)
+        {
+            try
+            {
+                foreach (Task task in tasks)
+                {
+                    if (task.IsDeleted)
+                    {
+                        DeleteTask(task.TaskId);
+                    }
+                    else
+                    {
+                        if (task.TaskId > 0)
+                        {
+                            UpdateTask(task.TaskId, task);
+                        }
+                        else
+                        {
+                            AddTask(task);
+                        }
+                    }
+                }
+            }
+            catch(Exception exception)
+            {
+                throw new Exception($"Error while saving tasks to the database: {exception.Message}");
             }
         }
     }

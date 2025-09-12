@@ -1,5 +1,6 @@
 ﻿using BusinessLogicToDoList;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Windows.Forms;
@@ -9,6 +10,9 @@ namespace ToDoList
 {
     public partial class formToDoList : Form
     {
+        private List<Task> tasks = new List<Task>();
+        private DataAccessLayer dataAccessLayer = new DataAccessLayer();
+        private Task selectedTask = new Task();
         public formToDoList()
         {
             InitializeComponent();
@@ -37,6 +41,7 @@ namespace ToDoList
             txtTimeRemaining.Text = "00:00:00";
             cBoxStatus.SelectedIndex = -1;
             dueDatePicker.Value = DateTime.Now.AddDays(1);
+            txtTaskName.Focus();
         }
 
         private void btnAddTask_Click(object sender, EventArgs e)
@@ -51,8 +56,8 @@ namespace ToDoList
 
                 if (task.Validate())
                 {
-                    DataAccessLayer dataAccessLayer = new DataAccessLayer();
-                    dataAccessLayer.AddTask(task);
+                    tasks.Add(task);
+                    loadTasksListView(tasks);
                 };
 
                 ToastNotification.Show("Task Added Successfully!");
@@ -84,21 +89,19 @@ namespace ToDoList
         {
             try
             {
-                Task updatedTask = new Task();
-                updatedTask.TaskName = txtTaskName.Text;
-                updatedTask.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(txtTimeRemaining.Text, "hh\\:mm\\:ss", null).TotalSeconds);
-                updatedTask.TaskStatusId = Convert.ToInt16(cBoxStatus.SelectedValue);
-                updatedTask.DueDate = dueDatePicker.Value;
+                selectedTask.TaskName = txtTaskName.Text;
+                selectedTask.TimeRemaining = Convert.ToInt32(TimeSpan.ParseExact(txtTimeRemaining.Text, "hh\\:mm\\:ss", null).TotalSeconds);
+                selectedTask.TaskStatusId = Convert.ToInt16(cBoxStatus.SelectedValue);
+                selectedTask.DueDate = dueDatePicker.Value;
 
-                if (updatedTask.Validate())
+                if (selectedTask.Validate())
                 {
-                    DataAccessLayer dataAccessLayer = new DataAccessLayer();
-                    dataAccessLayer.UpdateTask(Convert.ToInt32(lblSelectedTaskIdValue.Text), updatedTask);
+                    loadTasksListView(tasks);
                 }
 
                 ToastNotification.Show("Task Updated Successfully!");
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 MessageBox.Show($"Error while updating task: {exception.Message}");
             }
@@ -110,35 +113,37 @@ namespace ToDoList
 
         private void tasksListView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            lblSelectedTaskIdValue.Text = tasksListView.Rows[e.RowIndex].Cells["Task Id"].Value.ToString();
-            txtTaskName.Text = tasksListView.Rows[e.RowIndex].Cells["Task Name"].Value.ToString();
-            cBoxStatus.Text = tasksListView.Rows[e.RowIndex].Cells["Task Status"].Value.ToString();
-            txtTimeRemaining.Text = tasksListView.Rows[e.RowIndex].Cells["Time Remaining"].Value.ToString();
-            dueDatePicker.Value = Convert.ToDateTime(tasksListView.Rows[e.RowIndex].Cells["Due Date"].Value);
+            selectedTask = tasks[e.RowIndex];
+            lblSelectedTaskIdValue.Text = selectedTask.TaskId.ToString();
+            txtTaskName.Text = selectedTask.TaskName;
+            cBoxStatus.Text = selectedTask.TaskStatusName;
+            txtTimeRemaining.Text = TimeSpan.FromSeconds(Convert.ToInt32(selectedTask.TimeRemaining)).ToString(@"hh\:mm\:ss");
+            dueDatePicker.Value = Convert.ToDateTime(selectedTask.DueDate);
         }
 
-        private void btnShowAllTasks_Click(object sender, EventArgs e)
+        private void loadTasksListView(List<Task> tasks)
         {
             try
             {
-                DataAccessLayer dataAccessLayer = new DataAccessLayer();
-                DataSet tasks = dataAccessLayer.GetAllTasks();
-
                 DataTable tasksTable = new DataTable();
                 tasksTable.Columns.Add("Task Id", typeof(int));
                 tasksTable.Columns.Add("Task Name", typeof(string));
+                tasksTable.Columns.Add("Status Id", typeof(int));
                 tasksTable.Columns.Add("Task Status", typeof(string));
                 tasksTable.Columns.Add("Time Remaining", typeof(string));
                 tasksTable.Columns.Add("Due Date", typeof(DateTime));
+                tasksTable.Columns.Add("Is Deleted", typeof(bool));
 
-                foreach (DataRow row in tasks.Tables[0].Rows)
+                foreach (Task task in tasks)
                 {
                     DataRow taskRow = tasksTable.NewRow();
-                    taskRow["Task Id"] = row["TaskId"];
-                    taskRow["Task Name"] = row["TaskName"];
-                    taskRow["Task Status"] = row["StatusName"];
-                    taskRow["Time Remaining"] = TimeSpan.FromSeconds(Convert.ToInt32(row["TimeRemaining"])).ToString(@"hh\:mm\:ss");
-                    taskRow["Due Date"] = Convert.ToDateTime(row["DueDate"]);
+                    taskRow["Task Id"] = task.TaskId;
+                    taskRow["Task Name"] = task.TaskName;
+                    taskRow["Status Id"] = task.TaskStatusId;
+                    taskRow["Task Status"] = task.TaskStatusName;
+                    taskRow["Time Remaining"] = TimeSpan.FromSeconds(Convert.ToInt32(task.TimeRemaining)).ToString(@"hh\:mm\:ss");
+                    taskRow["Due Date"] = Convert.ToDateTime(task.DueDate);
+                    taskRow["Is Deleted"] = task.IsDeleted;
                     tasksTable.Rows.Add(taskRow);
                 }
 
@@ -146,9 +151,11 @@ namespace ToDoList
 
                 this.tasksListView.Columns["Task Id"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Task Name"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                this.tasksListView.Columns["Status Id"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Task Status"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Time Remaining"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.tasksListView.Columns["Due Date"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                this.tasksListView.Columns["Is Deleted"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
             catch (Exception exception)
             {
@@ -159,12 +166,15 @@ namespace ToDoList
         private void formToDoList_Load(object sender, EventArgs e)
         {
             this.Text = ConfigurationManager.AppSettings["ApplicationName"].ToString();
-            btnShowAllTasks.Text = ConfigurationManager.AppSettings["ShowAllTasksButton"].ToString();
+            btnSaveAll.Text = ConfigurationManager.AppSettings["SaveAllButton"].ToString();
             btnAddTask.Text = ConfigurationManager.AppSettings["AddTaskButton"].ToString();
             btnUpdateTask.Text = ConfigurationManager.AppSettings["UpdateTaskButton"].ToString();
             btnDeleteTask.Text = ConfigurationManager.AppSettings["DeleteTaskButton"].ToString();
 
             fillTaskStatusComboBox();
+
+            tasks = dataAccessLayer.GetAllTasks();
+            loadTasksListView(tasks);
 
             resetToDoListForm();
         }
@@ -173,13 +183,33 @@ namespace ToDoList
         {
             try
             {
-                DataAccessLayer dataAccessLayer = new DataAccessLayer();
-                dataAccessLayer.DeleteTask(Convert.ToInt32(lblSelectedTaskIdValue.Text));
+                selectedTask.IsDeleted = true;
+                loadTasksListView(tasks);
+
                 ToastNotification.Show("Task Deleted Successfully!");
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 MessageBox.Show($"Error while deleting task: {exception.Message}");
+            }
+            finally
+            {
+                resetToDoListForm();
+            }
+        }
+
+        private void btnSaveAll_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                dataAccessLayer.SaveAllTasks(tasks);
+                loadTasksListView(dataAccessLayer.GetAllTasks());
+
+                ToastNotification.Show("All Tasks Saved Successfully!");
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Error while saving tasks: {exception.Message}");
             }
             finally
             {

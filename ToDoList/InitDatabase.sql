@@ -1,6 +1,6 @@
 USE [ToDoListDB]
 GO
-/****** Object:  Table [dbo].[Tasks]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  Table [dbo].[Tasks]    Script Date: 11-09-2025 23:54:55 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17,7 +17,7 @@ CREATE TABLE [dbo].[Tasks](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TaskStatus]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  Table [dbo].[TaskStatus]    Script Date: 11-09-2025 23:54:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -36,7 +36,7 @@ REFERENCES [dbo].[TaskStatus] ([StatusId])
 GO
 ALTER TABLE [dbo].[Tasks] CHECK CONSTRAINT [FK_Tasks_TaskStatus]
 GO
-/****** Object:  StoredProcedure [dbo].[DeleteTask]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  StoredProcedure [dbo].[DeleteTask]    Script Date: 11-09-2025 23:54:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -49,7 +49,7 @@ BEGIN
 	WHERE TaskId = @TaskId
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[GetAllTasks]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  StoredProcedure [dbo].[GetAllTasks]    Script Date: 11-09-2025 23:54:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -62,7 +62,7 @@ BEGIN
 	ON t.TaskStatusId = ts.StatusId
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[GetAllTaskStatuses]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  StoredProcedure [dbo].[GetAllTaskStatuses]    Script Date: 11-09-2025 23:54:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -74,7 +74,7 @@ BEGIN
 	FROM dbo.TaskStatus
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[InsertTask]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  StoredProcedure [dbo].[InsertTask]    Script Date: 11-09-2025 23:54:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -90,24 +90,27 @@ BEGIN
 	VALUES (@TaskName, @TimeRemaining, @TaskStatusId, @DueDate);
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[UpdateTask]    Script Date: 08-09-2025 23:09:28 ******/
+/****** Object:  StoredProcedure [dbo].[UpdateTask]    Script Date: 11-09-2025 23:54:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[UpdateTask]
- @TaskId INT,
- @TaskName NVARCHAR(50),  
- @TimeRemaining INT,  
- @TaskStatusId INT,  
- @DueDate DATE  
-AS  
-BEGIN  
- UPDATE dbo.Tasks   
- SET TaskName = @TaskName,  
-  TimeRemaining = @TimeRemaining,  
-  TaskStatusId = @TaskStatusId,  
-  DueDate = @DueDate
- WHERE TaskId = @TaskId
+CREATE PROCEDURE [dbo].[UpdateTask]  
+ @TaskId INT,  
+ @TaskName NVARCHAR(50),    
+ @TimeRemaining INT,    
+ @TaskStatusId INT,    
+ @DueDate DATE    
+AS    
+BEGIN    
+    UPDATE dbo.Tasks     
+    SET TaskName = @TaskName,    
+        TimeRemaining = @TimeRemaining,    
+        TaskStatusId = CASE 
+                          WHEN @TaskStatusId > 0 THEN @TaskStatusId 
+                          ELSE TaskStatusId 
+                       END,    
+        DueDate = @DueDate  
+    WHERE TaskId = @TaskId;  
 END;
 GO
